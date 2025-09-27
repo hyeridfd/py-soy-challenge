@@ -136,10 +136,6 @@ def fetch_org_responses_df(org: str) -> pd.DataFrame:
 
 # ---------- Pages ----------
 def main():
-    # ✅ 페이지 맨 위에서 CSS 먼저 추가
-    if st.session_state.get('_scroll_top'):
-        scroll_to_top()
-        st.session_state['_scroll_top'] = False
 
     st.markdown("""
     <style>
