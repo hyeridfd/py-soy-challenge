@@ -351,7 +351,7 @@ def challenge_page():
                 if name and gender and age and organization:
                     st.session_state.participant_info = {"name":name,"gender":gender,"age":age,"organization":organization}
                     st.session_state.step = 2
-                    st.session_state['_scroll_top'] = True
+                    #st.session_state['_scroll_top'] = True
                     st.session_state['active_tab'] = 'challenge'
 
                     st.rerun()
