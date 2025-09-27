@@ -412,11 +412,35 @@ def challenge_page():
                 st.session_state.step = 3
                 st.session_state['_scroll_top'] = True
                 st.session_state["force_challenge_tab"] = True
+                st.session_state['_enter_step3'] = True
                 st.rerun()
 
 # 3단계
     elif st.session_state.step == 3:
         st.markdown('<div class="section-header">시음 평가</div>', unsafe_allow_html=True)
+      # ✅ 3단계에 들어온 '바로 다음 렌더'에서만 강제로 맨 위로
+        if st.session_state.pop("_enter_step3", False):
+            components.html("""
+            <script>
+            (function(){
+              function toTop(){
+                try{
+                  const root = window.parent || window;
+                  // 페이지 전체 스크롤
+                  root.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                  window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                  // Streamlit 메인 컨테이너 내부 스크롤도 0으로
+                  const main = root.document.querySelector('section[data-testid="stMain"]');
+                  if (main) main.scrollTop = 0;
+                }catch(e){}
+              }
+              // 렌더 타이밍에 따라 여러 번 시도
+              requestAnimationFrame(()=>{ setTimeout(toTop, 0); });
+              setTimeout(toTop, 150);
+              setTimeout(toTop, 400);
+            })();
+            </script>
+            """, height=0)
     
         def selected_brands():
             return [st.session_state.get(f"{s}_brand","선택하세요")
