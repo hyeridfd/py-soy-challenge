@@ -1,4 +1,14 @@
 import streamlit as st
+
+
+# ===================== 페이지 설정 =====================
+st.set_page_config(
+    page_title="두믈리에 챌린지",
+    page_icon="",
+    layout="wide",
+    initial_sidebar_state="collapsed"
+)
+
 import pandas as pd
 import plotly.graph_objects as go
 import numpy as np
@@ -7,18 +17,17 @@ import pytz
 import os
 import textwrap
 import streamlit.components.v1 as components
-
-# ===================== Supabase =====================
-# pip install supabase openpyxl
 from supabase import create_client, Client
 
-@st.cache_resource
-def get_supabase() -> Client:
-    url = st.secrets["SUPABASE_URL"]
-    key = st.secrets["SUPABASE_SERVICE_ROLE_KEY"]  # 서버 사이드에서만 사용
-    return create_client(url, key)
 
-supabase = get_supabase()
+# ===================== Supabase =====================
+pip install supabase openpyxl
+
+@st.cache_resource
+def supabase_client() -> Client:
+    url = st.secrets["SUPABASE_URL"]
+    key = st.secrets["SUPABASE_SERVICE_ROLE_KEY"]
+    return create_client(url, key)
 
 def insert_response_row(row: dict) -> bool:
     """17개 컬럼을 tasting_responses에 1행 insert"""
@@ -56,13 +65,6 @@ def fetch_org_responses_df(org: str) -> pd.DataFrame:
 # ===================== Plotly =====================
 PLOTLY_CONFIG = {"displayModeBar": False, "displaylogo": False, "responsive": True}
 
-# ===================== 페이지 설정 =====================
-st.set_page_config(
-    page_title="두믈리에 챌린지",
-    page_icon="",
-    layout="wide",
-    initial_sidebar_state="collapsed"
-)
 
 # ===================== CSS =====================
 st.markdown("""
@@ -157,12 +159,14 @@ def display_brand_rankings():
 
 # ===================== 앱 =====================
 def main():
-    st.markdown("""
-    <div class="main-header">
-        <h1 class="main-title">두믈리에 챌린지</h1>
-        <p class="subtitle">자연의 맛을 찾아가는 특별한 여행</p>
-    </div>
-    """, unsafe_allow_html=True)
+    sb = supabase_client()
+    st.markdown("<style>/* CSS */</style>", unsafe_allow_html=True)
+    # st.markdown("""
+    # <div class="main-header">
+    #     <h1 class="main-title">두믈리에 챌린지</h1>
+    #     <p class="subtitle">자연의 맛을 찾아가는 특별한 여행</p>
+    # </div>
+    # """, unsafe_allow_html=True)
 
     tab1, tab2, tab3 = st.tabs(["🏠 홈", "🚀 챌린지", "🔧 관리자"])
     with tab1: home_page()
