@@ -192,9 +192,12 @@ def fetch_org_responses_df(org: str) -> pd.DataFrame:
 
 # ---------- Pages ----------
 def main():
-    # if st.session_state.get('_scroll_top'):
-    #     st.markdown("<script>window.scrollTo(0,0);</script>", unsafe_allow_html=True)
-    #     st.session_state['_scroll_top'] = False
+    if st.session_state.get("_scroll_top"):
+            st.markdown(
+                "<script>window.parent.scrollTo(0,0);window.scrollTo(0,0);</script>",
+                unsafe_allow_html=True
+            )
+            st.session_state["_scroll_top"] = False
 
     # 탭/페이지 렌더 …
     
@@ -231,6 +234,19 @@ def main():
 
     # ✅ 탭 생성
     tab1, tab2, tab3 = st.tabs(["🏠 홈", "🚀 챌린지", "🔧 관리자"])
+
+  # --- 다음 렌더에서 챌린지 탭을 자동 선택 ---
+    if st.session_state.get("force_challenge_tab"):
+        components.html("""
+            <script>
+              const tabs = window.parent.document.querySelectorAll('[data-baseweb="tab"]');
+              let idx = -1;
+              tabs.forEach((el, i) => { if (el.innerText.includes('🚀 챌린지')) idx = i; });
+              if (idx >= 0) tabs[idx].click();
+            </script>
+        """, height=0)
+        st.session_state["force_challenge_tab"] = False
+
     with tab1:
         home_page()
     with tab2:
@@ -346,8 +362,8 @@ def challenge_page():
                 if name and gender and age and organization:
                     st.session_state.participant_info = {"name":name,"gender":gender,"age":age,"organization":organization}
                     st.session_state.step = 2
-                    #st.session_state['_scroll_top'] = True
-                    st.session_state['active_tab'] = 'challenge'
+                    st.session_state['_scroll_top'] = True
+                    st.session_state["force_challenge_tab"] = True
 
                     st.rerun()
                 else:
@@ -388,11 +404,14 @@ def challenge_page():
         with p:
             if st.button("⬅️ 이전 단계로", use_container_width=True, key="prev2"):
                 st.session_state.step = 1
+                st.session_state["_scroll_top"] = True
+                st.session_state["force_challenge_tab"] = True
                 st.rerun()
         with n:
             if st.button("시음 평가하기 ➡️", use_container_width=True, key="next2"):
                 st.session_state.step = 3
                 st.session_state['_scroll_top'] = True
+                st.session_state["force_challenge_tab"] = True
                 st.rerun()
 
 # 3단계
@@ -481,6 +500,8 @@ def challenge_page():
         with p:
             if st.button("⬅️ 이전 단계로", use_container_width=True, key="prev3"):
                 st.session_state.step = 2
+                st.session_state["_scroll_top"] = True
+                st.session_state["force_challenge_tab"] = True
                 st.rerun()
         with n:
             if all_done and not dup:
@@ -494,6 +515,7 @@ def challenge_page():
                     }
                     st.session_state.step = 4
                     st.session_state['_scroll_top'] = True
+                    st.session_state["force_challenge_tab"] = True
                     st.rerun()
 
 
