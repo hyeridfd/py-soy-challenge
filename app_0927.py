@@ -410,28 +410,25 @@ def challenge_page():
     elif st.session_state.step == 3:
         st.markdown('<div class="section-header">시음 평가</div>', unsafe_allow_html=True)
       # ✅ 3단계에 들어온 '바로 다음 렌더'에서만 강제로 맨 위로
-        # ✅ 3단계에 들어온 '바로 다음 렌더'에서만 강제로 맨 위로
-        if st.session_state.pop("_enter_step3", False):
-            components.html("""
-            <script>
-            (function(){
-              function toTop(){
-                try{
-                  const root = window.parent || window;
-                  root.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-                  window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-                  const main = root.document.querySelector('section[data-testid="stMain"]');
-                  if (main) main.scrollTop = 0;
-                }catch(e){}
-              }
-              // DOM 렌더 이후 여러 번 시도
-              requestAnimationFrame(toTop);
-              setTimeout(toTop, 100);   // 첫 번째 DOM 렌더 직후
-              setTimeout(toTop, 400);   // Plotly 그래프 렌더 직후
-              setTimeout(toTop, 800);   // selectbox까지 완성된 뒤
-            })();
-            </script>
-            """, height=0)
+        components.html("""
+          <script>
+          (function(){
+            function toTop(){
+              try{
+                const root = window.parent || window;
+                root.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                const main = root.document.querySelector('section[data-testid="stMain"]');
+                if (main) main.scrollTop = 0;
+              }catch(e){}
+            }
+            requestAnimationFrame(toTop);
+            setTimeout(toTop, 200);    // 첫 번째 렌더 직후
+            setTimeout(toTop, 600);    // plotly 로드 이후
+            setTimeout(toTop, 1200);   // selectbox 로드 이후
+          })();
+          </script>
+          """, height=0)
 
         def selected_brands():
             return [st.session_state.get(f"{s}_brand","선택하세요")
