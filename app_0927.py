@@ -364,8 +364,9 @@ def challenge_page():
                     b = lst[i+j]
                     with cols[j]:
                         st.markdown(f"""<div class="brand-card"><div class="brand-name">{b}</div></div>""", unsafe_allow_html=True)
+                        st.plotly_chart(fig, use_container_width=True, config=PLOTLY_CONFIG)   
                         fig = create_modern_taste_profile(BRANDS[b]["taste_profile"], f"{b} 맛 프로필")
-                        st.plotly_chart(fig, use_container_width=True, config=PLOTLY_CONFIG)
+                        #st.plotly_chart(fig, use_container_width=True, config=PLOTLY_CONFIG)
                         jin = BRANDS[b]["taste_profile"]["진함"]; dan = BRANDS[b]["taste_profile"]["단맛"]
                         st.markdown(f"- 단맛: {'🔵'*dan}{'⚪'*(4-dan)} ({dan}/4)")
                         st.markdown(f"- 진함: {'🔵'*jin}{'⚪'*(4-jin)} ({jin}/4)")
