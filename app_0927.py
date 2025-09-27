@@ -252,7 +252,6 @@ def home_page():
         if st.button("🚀 챌린지 시작하기", use_container_width=True, key="home_start"):
             st.session_state["jump_to_challenge"] = True
             st.session_state.step = 1
-            st.session_state['_scroll_top'] = True
             st.rerun()
 
 def challenge_page():
