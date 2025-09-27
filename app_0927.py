@@ -384,7 +384,8 @@ def challenge_page():
         with n:
             if st.button("시음 평가하기 ➡️", use_container_width=True, key="next2"):
                 st.session_state.step = 3
-                st.session_state['_scroll_top'] = True 
+                st.session_state['_scroll_top'] = True
+                st.session_state['active_tab'] = 'challenge'
                 st.rerun()
 
     # 3단계
