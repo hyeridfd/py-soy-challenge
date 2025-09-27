@@ -360,28 +360,39 @@ def challenge_page():
         for i in range(0, len(lst), 2):
             cols = st.columns(2)
             for j in range(2):
-                if i+j < len(lst):
-                    b = lst[i+j]
+                if i + j < len(lst):
+                    b = lst[i + j]
                     with cols[j]:
-                        st.markdown(f"""<div class="brand-card"><div class="brand-name">{b}</div></div>""", unsafe_allow_html=True)
-                        st.plotly_chart(fig, use_container_width=True, config=PLOTLY_CONFIG)   
+                        st.markdown(
+                            f"""<div class="brand-card"><div class="brand-name">{b}</div></div>""",
+                            unsafe_allow_html=True
+                        )
+    
+                        # ✅ 먼저 fig 생성
                         fig = create_modern_taste_profile(BRANDS[b]["taste_profile"], f"{b} 맛 프로필")
-                        #st.plotly_chart(fig, use_container_width=True, config=PLOTLY_CONFIG)
-                        jin = BRANDS[b]["taste_profile"]["진함"]; dan = BRANDS[b]["taste_profile"]["단맛"]
+                        # ✅ 그 다음 차트 렌더
+                        st.plotly_chart(fig, use_container_width=True, config=PLOTLY_CONFIG)
+    
+                        jin = BRANDS[b]["taste_profile"]["진함"]
+                        dan = BRANDS[b]["taste_profile"]["단맛"]
                         st.markdown(f"- 단맛: {'🔵'*dan}{'⚪'*(4-dan)} ({dan}/4)")
                         st.markdown(f"- 진함: {'🔵'*jin}{'⚪'*(4-jin)} ({jin}/4)")
-                        if not (i == len(lst) - 2 and j == 1): st.markdown("---")
+    
+                        # 마지막 카드 구분선 생략
+                        if not (i == len(lst) - 2 and j == 1):
+                            st.markdown("---")
+    
         display_brand_rankings()
         st.info("📝 특성을 확인하셨다면, 다음 단계에서 실제 시음을 진행해주세요!")
-        p,n = st.columns(2)
+        p, n = st.columns(2)
         with p:
             if st.button("⬅️ 이전 단계로", use_container_width=True, key="prev2"):
-                st.session_state.step = 1; st.rerun()
+                st.session_state.step = 1
+                st.rerun()
         with n:
             if st.button("시음 평가하기 ➡️", use_container_width=True, key="next2"):
                 st.session_state.step = 3
                 st.session_state['_scroll_top'] = True
-                st.session_state['active_tab'] = 'challenge'
                 st.rerun()
 
     # 3단계
