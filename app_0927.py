@@ -48,6 +48,32 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+st.markdown("""
+<style>
+/* 모바일에서 흐리게 보이는 텍스트를 진하게 수정 */
+h1, h2, h3, h4, h5, h6, p, div, span {
+    color: #1f2937 !important;  /* 진한 네이비/블랙톤 */
+}
+
+/* 제목용은 좀 더 진하게 */
+.section-header {
+    color: #0f172a !important;
+    font-weight: 700 !important;
+}
+
+/* 바 차트 제목 텍스트 */
+.js-plotly-plot .main-svg text {
+    fill: #1f2937 !important;
+}
+
+/* bullet 리스트나 label 텍스트 */
+li, label {
+    color: #1f2937 !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
+
 # ---------- Domain ----------
 BRANDS = {
     "A": {"taste_profile": {"진함": 4, "단맛": 1}},
