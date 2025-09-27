@@ -1,0 +1,7 @@
+[theme]
+base = "light"  # ✅ 다크모드 자동 전환 방지
+primaryColor = "#3498db"
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f7fbff"
+textColor = "#1f2937"   # ✅ PC/모바일 동일 텍스트 컬러
+font = "sans serif"
