@@ -234,14 +234,30 @@ def main():
     </div>
     """, unsafe_allow_html=True)
 
-    # ✅ 탭 생성
-    tab1, tab2, tab3 = st.tabs(["🏠 홈", "🚀 챌린지", "🔧 관리자"])
-    with tab1:
-        home_page()
-    with tab2:
-        challenge_page()
-    with tab3:
-        admin_dashboard()
+      # 세션 기본값 설정
+    if "active_tab" not in st.session_state:
+        st.session_state["active_tab"] = "home"
+    
+    tabs = st.tabs(["🏠 홈", "🚀 챌린지", "🔧 관리자"])
+    
+    if st.session_state["active_tab"] == "home":
+        with tabs[0]:
+            home_page()
+    elif st.session_state["active_tab"] == "challenge":
+        with tabs[1]:
+            challenge_page()
+    elif st.session_state["active_tab"] == "admin":
+        with tabs[2]:
+            admin_dashboard()
+
+    # # ✅ 탭 생성
+    # tab1, tab2, tab3 = st.tabs(["🏠 홈", "🚀 챌린지", "🔧 관리자"])
+    # with tab1:
+    #     home_page()
+    # with tab2:
+    #     challenge_page()
+    # with tab3:
+    #     admin_dashboard()
 
     if st.session_state.get("jump_to_challenge"):
         components.html("""
