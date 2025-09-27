@@ -192,15 +192,6 @@ def fetch_org_responses_df(org: str) -> pd.DataFrame:
 
 # ---------- Pages ----------
 def main():
-    if st.session_state.get("_scroll_top"):
-            st.markdown(
-                "<script>window.parent.scrollTo(0,0);window.scrollTo(0,0);</script>",
-                unsafe_allow_html=True
-            )
-            st.session_state["_scroll_top"] = False
-
-    # 탭/페이지 렌더 …
-    
     st.markdown("""
     <style>
     /* 탭 중앙 정렬 */
@@ -419,6 +410,7 @@ def challenge_page():
     elif st.session_state.step == 3:
         st.markdown('<div class="section-header">시음 평가</div>', unsafe_allow_html=True)
       # ✅ 3단계에 들어온 '바로 다음 렌더'에서만 강제로 맨 위로
+        # ✅ 3단계에 들어온 '바로 다음 렌더'에서만 강제로 맨 위로
         if st.session_state.pop("_enter_step3", False):
             components.html("""
             <script>
@@ -426,22 +418,21 @@ def challenge_page():
               function toTop(){
                 try{
                   const root = window.parent || window;
-                  // 페이지 전체 스크롤
                   root.scrollTo({ top: 0, left: 0, behavior: 'instant' });
                   window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-                  // Streamlit 메인 컨테이너 내부 스크롤도 0으로
                   const main = root.document.querySelector('section[data-testid="stMain"]');
                   if (main) main.scrollTop = 0;
                 }catch(e){}
               }
-              // 렌더 타이밍에 따라 여러 번 시도
-              requestAnimationFrame(()=>{ setTimeout(toTop, 0); });
-              setTimeout(toTop, 150);
-              setTimeout(toTop, 400);
+              // DOM 렌더 이후 여러 번 시도
+              requestAnimationFrame(toTop);
+              setTimeout(toTop, 100);   // 첫 번째 DOM 렌더 직후
+              setTimeout(toTop, 400);   // Plotly 그래프 렌더 직후
+              setTimeout(toTop, 800);   // selectbox까지 완성된 뒤
             })();
             </script>
             """, height=0)
-    
+
         def selected_brands():
             return [st.session_state.get(f"{s}_brand","선택하세요")
                     for s in SAMPLES if st.session_state.get(f"{s}_brand","선택하세요")!="선택하세요"]
