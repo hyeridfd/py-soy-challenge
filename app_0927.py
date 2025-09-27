@@ -360,7 +360,7 @@ def challenge_page():
                 st.session_state.step = 3; st.rerun()
         submitted = False
         with c_submit:
-            submitted = st.button("➡️ 최종 제출 (Supabase 저장)", key="submit4", use_container_width=True)
+            submitted = st.button("➡️ 최종 제출", key="submit4", use_container_width=True)
         with c_reset:
             if st.button("🔄 새로 시작", key="reset4", use_container_width=True):
                 for k in list(st.session_state.keys()): del st.session_state[k]
