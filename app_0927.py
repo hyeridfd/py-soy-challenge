@@ -1,6 +1,61 @@
 # ===================== MUST BE FIRST =====================
 import streamlit as st
 st.set_page_config(page_title="두믈리에 챌린지", page_icon="🥛", layout="wide", initial_sidebar_state="collapsed")
+
+st.markdown("""
+<style>
+/* ✅ 시스템 다크 강제 끄기(특히 iOS의 입력 컨트롤 자동 다크 방지) */
+html, body, .stApp { color-scheme: light; }
+
+/* ✅ 공통 텍스트 컬러 고정: PC/모바일 동일 */
+.stApp, h1, h2, h3, h4, h5, h6, p, div, span, label, li {
+  color: #1f2937 !important;   /* 동일한 진한 회색(=PC와 같은 톤) */
+}
+
+/* ✅ 입력류 공통 (text/number 등) */
+.stTextInput input, .stNumberInput input, textarea {
+  background: #ffffff !important;
+  color: #1f2937 !important;
+  border: 1.5px solid #dbe5f0 !important;
+  border-radius: 12px !important;
+}
+
+/* ✅ selectbox(모바일에서 검정으로 보이는 이슈 해결) */
+[data-baseweb="select"] > div {         /* 본체 */
+  background: #ffffff !important;
+  color: #1f2937 !important;
+  border: 1.5px solid #dbe5f0 !important;
+  border-radius: 12px !important;
+}
+[data-baseweb="select"] svg {           /* 화살표 아이콘 */
+  color: #1f2937 !important;
+}
+/* 드롭다운 메뉴(포털로 분리되어 렌더) */
+[data-baseweb="popover"], [data-baseweb="menu"], [role="listbox"] {
+  background: #ffffff !important;
+  color: #1f2937 !important;
+  border: 1px solid #dbe5f0 !important;
+  border-radius: 10px !important;
+}
+[role="listbox"] [role="option"] {
+  color: #1f2937 !important;
+}
+
+/* ✅ Plotly 글씨 색 고정 (축, 라벨 등) */
+.js-plotly-plot .main-svg text { 
+  fill: #1f2937 !important;
+}
+
+/* 선택: 탭도 동일 톤으로 */
+.stTabs [data-baseweb="tab"] {
+  color: #1f2937 !important;
+}
+.stTabs [aria-selected="true"] {
+  color: #ffffff !important;  /* 선택된 탭은 흰 텍스트 */
+}
+</style>
+""", unsafe_allow_html=True)
+
 # ========================================================
 
 import pandas as pd
@@ -45,31 +100,6 @@ st.markdown("""
       section[data-testid="stMain"] .block-container{ padding-left:var(--pad-x)!important; padding-right:var(--pad-x)!important; }
       .main-title{ font-size:2.0rem; }
     }
-</style>
-""", unsafe_allow_html=True)
-
-st.markdown("""
-<style>
-/* 모바일에서 흐리게 보이는 텍스트를 진하게 수정 */
-h1, h2, h3, h4, h5, h6, p, div, span {
-    color: #1f2937 !important;  /* 진한 네이비/블랙톤 */
-}
-
-/* 제목용은 좀 더 진하게 */
-.section-header {
-    color: #0f172a !important;
-    font-weight: 700 !important;
-}
-
-/* 바 차트 제목 텍스트 */
-.js-plotly-plot .main-svg text {
-    fill: #1f2937 !important;
-}
-
-/* bullet 리스트나 label 텍스트 */
-li, label {
-    color: #1f2937 !important;
-}
 </style>
 """, unsafe_allow_html=True)
 
