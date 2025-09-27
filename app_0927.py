@@ -9,7 +9,7 @@ html, body, .stApp { color-scheme: light; }
 
 /* ✅ 공통 텍스트 컬러 고정: PC/모바일 동일 */
 .stApp, h1, h2, h3, h4, h5, h6, p, div, span, label, li {
-  color: #1f2937 !important;   /* 동일한 진한 회색(=PC와 같은 톤) */
+  color: #1f2937 !important;
 }
 
 /* ✅ 입력류 공통 (text/number 등) */
@@ -21,38 +21,30 @@ html, body, .stApp { color-scheme: light; }
 }
 
 /* ✅ selectbox(모바일에서 검정으로 보이는 이슈 해결) */
-[data-baseweb="select"] > div {         /* 본체 */
+[data-baseweb="select"] > div {
   background: #ffffff !important;
   color: #1f2937 !important;
   border: 1.5px solid #dbe5f0 !important;
   border-radius: 12px !important;
 }
-[data-baseweb="select"] svg {           /* 화살표 아이콘 */
-  color: #1f2937 !important;
-}
-/* 드롭다운 메뉴(포털로 분리되어 렌더) */
+[data-baseweb="select"] svg { color: #1f2937 !important; }
 [data-baseweb="popover"], [data-baseweb="menu"], [role="listbox"] {
   background: #ffffff !important;
   color: #1f2937 !important;
   border: 1px solid #dbe5f0 !important;
   border-radius: 10px !important;
 }
-[role="listbox"] [role="option"] {
-  color: #1f2937 !important;
-}
+[role="listbox"] [role="option"] { color: #1f2937 !important; }
 
 /* ✅ Plotly 글씨 색 고정 (축, 라벨 등) */
-.js-plotly-plot .main-svg text { 
-  fill: #1f2937 !important;
-}
+.js-plotly-plot .main-svg text { fill: #1f2937 !important; }
 
-/* 선택: 탭도 동일 톤으로 */
-.stTabs [data-baseweb="tab"] {
-  color: #1f2937 !important;
-}
-.stTabs [aria-selected="true"] {
-  color: #ffffff !important;  /* 선택된 탭은 흰 텍스트 */
-}
+/* 탭 텍스트 */
+.stTabs [data-baseweb="tab"] { color: #1f2937 !important; }
+.stTabs [aria-selected="true"] { color: #ffffff !important; }
+
+/* 브라우저가 기본 smooth scroll 강제하는 경우 방지 */
+html { scroll-behavior: auto !important; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -114,15 +106,6 @@ BRANDS = {
 SAMPLES = ["1", "2", "3", "4"]
 
 # ---------- Helpers ----------
-def scroll_to_top():
-    components.html("""
-    <script>
-      // Streamlit rerun 후 맨 위로 이동
-      window.parent && window.parent.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-    </script>
-    """, height=0)
-    
 def create_modern_taste_profile(taste_data, title):
     fig = go.Figure()
     categories = ['☕ 진함', '🧊 단맛']
@@ -190,26 +173,21 @@ def fetch_org_responses_df(org: str) -> pd.DataFrame:
         st.error(f"데이터 로드 오류: {e}")
         return pd.DataFrame()
 
+
 # ---------- Pages ----------
 def main():
+    # 공통 레이아웃 스타일
     st.markdown("""
     <style>
-    /* 탭 중앙 정렬 */
     .stTabs [data-baseweb="tab-list"]{
       display: flex !important;
       justify-content: center !important;
       width: 100%;
       gap: 12px;
     }
-    .stTabs [data-baseweb="tab"]{
-      min-width: 0;
-      padding: 0 20px;
-    }
-
-    /* 본문 가운데 정렬 */
+    .stTabs [data-baseweb="tab"]{ min-width: 0; padding: 0 20px; }
     section[data-testid="stMain"] .block-container{
-      max-width: 1100px;
-      margin: 0 auto;
+      max-width: 1100px; margin: 0 auto;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -222,11 +200,10 @@ def main():
     </div>
     """, unsafe_allow_html=True)
 
-
     # ✅ 탭 생성
     tab1, tab2, tab3 = st.tabs(["🏠 홈", "🚀 챌린지", "🔧 관리자"])
 
-  # --- 다음 렌더에서 챌린지 탭을 자동 선택 ---
+    # --- 다음 렌더에서 챌린지 탭을 자동 선택 ---
     if st.session_state.get("force_challenge_tab"):
         components.html("""
             <script>
@@ -245,6 +222,7 @@ def main():
     with tab3:
         admin_dashboard()
 
+    # 홈에서 "챌린지 시작하기" 클릭 시 탭 이동
     if st.session_state.get("jump_to_challenge"):
         components.html("""
             <script>
@@ -271,6 +249,7 @@ def main():
       .bottom-banner{ background:linear-gradient(135deg,#3498db,#2980b9); padding:14px 0; text-align:center; color:#fff; width:100vw; margin-left:calc(50% - 50vw); }
     </style>
     """, unsafe_allow_html=True)
+
 
 def home_page():
     st.markdown("""
@@ -319,6 +298,7 @@ def home_page():
             st.session_state.step = 1
             st.rerun()
 
+
 def challenge_page():
     if 'step' not in st.session_state: st.session_state.step = 1
     if 'participant_info' not in st.session_state: st.session_state.participant_info = {}
@@ -330,21 +310,9 @@ def challenge_page():
         c1,c2 = st.columns(2)
         with c1:
             name = st.text_input("이름", key="name", placeholder="예) 김스누")
-            gender = st.selectbox(
-                "성별",
-                options=["남", "여"],
-                key="gender"
-            )
-
+            gender = st.selectbox("성별", options=["남", "여"], key="gender")
         with c2:
-            age = st.number_input(
-                "연령", 
-                min_value=1, 
-                max_value=120, 
-                value=30,           # 기본값
-                step=1,             # 1살씩 증가
-                key="age"
-            )
+            age = st.number_input("연령", min_value=1, max_value=120, value=30, step=1, key="age")
             organization = st.text_input("소속", key="organization", value="푸드테크 최고책임자 9기", disabled=True)
         st.markdown("<br>", unsafe_allow_html=True)
         cc1,cc2,cc3 = st.columns([1,2,1])
@@ -353,9 +321,7 @@ def challenge_page():
                 if name and gender and age and organization:
                     st.session_state.participant_info = {"name":name,"gender":gender,"age":age,"organization":organization}
                     st.session_state.step = 2
-                    st.session_state['_scroll_top'] = True
                     st.session_state["force_challenge_tab"] = True
-
                     st.rerun()
                 else:
                     st.error("모든 정보를 입력해주세요.")
@@ -363,6 +329,8 @@ def challenge_page():
     # 2단계
     elif st.session_state.step == 2:
         st.markdown('<div class="section-header">🥛 네 가지 두유 브랜드 소개</div>', unsafe_allow_html=True)
+
+        # ⬆️ 2단계 들어올 때도 위로
         components.html("""
           <script>
           (function(){
@@ -376,12 +344,11 @@ def challenge_page():
               }catch(e){}
             }
             requestAnimationFrame(toTop);
-            setTimeout(toTop, 200);    // 첫 번째 렌더 직후
-            setTimeout(toTop, 600);    // plotly 로드 이후
-            setTimeout(toTop, 1200);   // selectbox 로드 이후
+            setTimeout(toTop, 200);
+            setTimeout(toTop, 600);
           })();
           </script>
-          """, height=0)
+        """, height=0)
 
         lst = sorted(BRANDS.keys())
         for i in range(0, len(lst), 2):
@@ -390,70 +357,68 @@ def challenge_page():
                 if i + j < len(lst):
                     b = lst[i + j]
                     with cols[j]:
-                        st.markdown(
-                            f"""<div class="brand-card"><div class="brand-name">{b}</div></div>""",
-                            unsafe_allow_html=True
-                        )
-    
-                        # ✅ 먼저 fig 생성
+                        st.markdown(f"""<div class="brand-card"><div class="brand-name">{b}</div></div>""", unsafe_allow_html=True)
+                        # 차트 먼저
                         fig = create_modern_taste_profile(BRANDS[b]["taste_profile"], f"{b} 맛 프로필")
-                        # ✅ 그 다음 차트 렌더
                         st.plotly_chart(fig, use_container_width=True, config=PLOTLY_CONFIG)
-    
+                        # 텍스트 요약
                         jin = BRANDS[b]["taste_profile"]["진함"]
                         dan = BRANDS[b]["taste_profile"]["단맛"]
                         st.markdown(f"- 단맛: {'🔵'*dan}{'⚪'*(4-dan)} ({dan}/4)")
                         st.markdown(f"- 진함: {'🔵'*jin}{'⚪'*(4-jin)} ({jin}/4)")
-    
-                        # 마지막 카드 구분선 생략
-                        if not (i == len(lst) - 2 and j == 1):
-                            st.markdown("---")
-    
+                        if not (i == len(lst) - 2 and j == 1): st.markdown("---")
+
         display_brand_rankings()
         st.info("📝 특성을 확인하셨다면, 다음 단계에서 실제 시음을 진행해주세요!")
         p, n = st.columns(2)
         with p:
             if st.button("⬅️ 이전 단계로", use_container_width=True, key="prev2"):
                 st.session_state.step = 1
-                st.session_state["_scroll_top"] = True
                 st.session_state["force_challenge_tab"] = True
                 st.rerun()
         with n:
             if st.button("시음 평가하기 ➡️", use_container_width=True, key="next2"):
+                # 다음 렌더에서 step3의 앵커로 점프하도록 플래그 세팅
                 st.session_state.step = 3
-                st.session_state['_scroll_top'] = True
+                st.session_state["_scroll_to_step3"] = True
                 st.session_state["force_challenge_tab"] = True
-                st.session_state['_enter_step3'] = True
                 st.rerun()
 
-# 3단계
+    # 3단계
     elif st.session_state.step == 3:
+        # --- 최상단 앵커(항상 동일한 id로 고정) ---
+        st.markdown('<div id="step3_top"></div>', unsafe_allow_html=True)
+
+        # --- 2→3 단계 전환 직후라면, 앵커로 강제 스크롤 ---
+        if st.session_state.pop("_scroll_to_step3", False):
+            components.html("""
+            <script>
+            (function(){
+              function toAnchor(){
+                try{
+                  const root = window.parent || window;
+                  const doc  = root.document || document;
+                  const el = doc.querySelector('#step3_top');
+                  if (el && el.scrollIntoView){
+                    el.scrollIntoView({ block: 'start', inline: 'nearest' });
+                  } else {
+                    root.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                  }
+                }catch(e){}
+              }
+              requestAnimationFrame(toAnchor);
+              setTimeout(toAnchor, 200);
+              setTimeout(toAnchor, 600);
+            })();
+            </script>
+            """, height=0)
+
         st.markdown('<div class="section-header">시음 평가</div>', unsafe_allow_html=True)
-      # ✅ 3단계에 들어온 '바로 다음 렌더'에서만 강제로 맨 위로
-        components.html("""
-          <script>
-          (function(){
-            function toTop(){
-              try{
-                const root = window.parent || window;
-                root.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-                window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-                const main = root.document.querySelector('section[data-testid="stMain"]');
-                if (main) main.scrollTop = 0;
-              }catch(e){}
-            }
-            requestAnimationFrame(toTop);
-            setTimeout(toTop, 200);    // 첫 번째 렌더 직후
-            setTimeout(toTop, 600);    // plotly 로드 이후
-            setTimeout(toTop, 1200);   // selectbox 로드 이후
-          })();
-          </script>
-          """, height=0)
 
         def selected_brands():
             return [st.session_state.get(f"{s}_brand","선택하세요")
                     for s in SAMPLES if st.session_state.get(f"{s}_brand","선택하세요")!="선택하세요"]
-    
+
         def available_for(sample):
             used = selected_brands()
             cur = st.session_state.get(f"{sample}_brand","선택하세요")
@@ -462,54 +427,43 @@ def challenge_page():
                 if b not in used or b == cur:
                     opts.append(b)
             return opts
-    
+
         for row in range(2):
             c1, c2 = st.columns(2)
             for col, idx in zip([c1, c2], [row*2, row*2+1]):
                 if idx < len(SAMPLES):
                     s = SAMPLES[idx]
                     with col:
-                        st.markdown(
-                            f"""<div class="sample-card"><div class="sample-title">🥛 {s}_두유</div></div>""",
-                            unsafe_allow_html=True
-                        )
-    
-                        # ✅ (1) 현재 세션값(없으면 기본 2)으로 차트를 '먼저' 표시
+                        st.markdown(f"""<div class="sample-card"><div class="sample-title">🥛 {s}_두유</div></div>""", unsafe_allow_html=True)
+
+                        # (1) 현재 세션값으로 차트 '먼저' 표시
                         sweet_curr = st.session_state.get(f"{s}_sweetness", 2)
                         deep_curr  = st.session_state.get(f"{s}_cleanness", 2)
                         fig = create_modern_taste_profile(
                             {"진함": deep_curr, "단맛": sweet_curr}, f"{s} 두유 평가"
                         )
                         st.plotly_chart(fig, use_container_width=True, config=PLOTLY_CONFIG)
-    
-                        # ✅ (2) 슬라이더들
-                        sweet = st.slider(
-                            "**1) 단맛 정도**", 1, 4, sweet_curr,
-                            help="1: 달지 않음, 4: 달큰함", key=f"{s}_sweetness"
-                        )
+
+                        # (2) 슬라이더
+                        sweet = st.slider("**1) 단맛 정도**", 1, 4, sweet_curr,
+                                          help="1: 달지 않음, 4: 달큰함", key=f"{s}_sweetness")
                         st.markdown(f"현재 값: {sweet}/4 {'🔵'*sweet}{'⚪'*(4-sweet)}")
-    
-                        deep = st.slider(
-                            "**2) 맛의 진함**", 1, 4, deep_curr,
-                            help="1: 매우 깔끔함, 4: 매우 진함", key=f"{s}_cleanness"
-                        )
+
+                        deep = st.slider("**2) 맛의 진함**", 1, 4, deep_curr,
+                                         help="1: 매우 깔끔함, 4: 매우 진함", key=f"{s}_cleanness")
                         st.markdown(f"현재 값: {deep}/4 {'🔵'*deep}{'⚪'*(4-deep)}")
-    
-                        # ✅ (3) 브랜드 선택
+
+                        # (3) 브랜드 선택
                         opts = available_for(s)
                         cur = st.session_state.get(f"{s}_brand", "선택하세요")
-                        if cur not in opts:
-                            cur = "선택하세요"
-                        chosen = st.selectbox(
-                            "**3) 어떤 브랜드일까요?**",
-                            opts, index=opts.index(cur), key=f"{s}_brand"
-                        )
-    
+                        if cur not in opts: cur = "선택하세요"
+                        chosen = st.selectbox("**3) 어떤 브랜드일까요?**",
+                                              opts, index=opts.index(cur), key=f"{s}_brand")
                         if chosen != "선택하세요":
                             dups = [x for x in SAMPLES if x != s and st.session_state.get(f"{x}_brand") == chosen]
                             if dups:
                                 st.warning(f"⚠️ {chosen}는 {', '.join(dups)} 샘플에서도 선택! (브랜드는 1회만)")
-    
+
         st.markdown('<div class="section-header">📋 현재 선택 현황</div>', unsafe_allow_html=True)
         status_df = pd.DataFrame([{
             "샘플": f"{s}_두유",
@@ -517,7 +471,7 @@ def challenge_page():
             "상태": "✅ 완료" if st.session_state.get(f"{s}_brand","선택하세요")!="선택하세요" else "❌ 미완료"
         } for s in SAMPLES])
         st.dataframe(status_df, use_container_width=True)
-    
+
         all_done = all([st.session_state.get(f"{s}_brand","선택하세요")!="선택하세요" for s in SAMPLES])
         used = selected_brands()
         dup = len(used) != len(set(used))
@@ -527,12 +481,11 @@ def challenge_page():
             st.warning("⚠️ 모든 두유의 브랜드를 선택해주세요.")
         elif dup:
             st.error("❌ 중복된 브랜드가 선택되었습니다. 각 브랜드는 1회만.")
-    
+
         p, n = st.columns(2)
         with p:
             if st.button("⬅️ 이전 단계로", use_container_width=True, key="prev3"):
                 st.session_state.step = 2
-                st.session_state["_scroll_top"] = True
                 st.session_state["force_challenge_tab"] = True
                 st.rerun()
         with n:
@@ -546,10 +499,8 @@ def challenge_page():
                         } for s in SAMPLES
                     }
                     st.session_state.step = 4
-                    st.session_state['_scroll_top'] = True
                     st.session_state["force_challenge_tab"] = True
                     st.rerun()
-
 
     # 4단계
     elif st.session_state.step == 4:
