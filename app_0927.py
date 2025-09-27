@@ -363,6 +363,26 @@ def challenge_page():
     # 2단계
     elif st.session_state.step == 2:
         st.markdown('<div class="section-header">🥛 네 가지 두유 브랜드 소개</div>', unsafe_allow_html=True)
+        components.html("""
+          <script>
+          (function(){
+            function toTop(){
+              try{
+                const root = window.parent || window;
+                root.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                const main = root.document.querySelector('section[data-testid="stMain"]');
+                if (main) main.scrollTop = 0;
+              }catch(e){}
+            }
+            requestAnimationFrame(toTop);
+            setTimeout(toTop, 200);    // 첫 번째 렌더 직후
+            setTimeout(toTop, 600);    // plotly 로드 이후
+            setTimeout(toTop, 1200);   // selectbox 로드 이후
+          })();
+          </script>
+          """, height=0)
+
         lst = sorted(BRANDS.keys())
         for i in range(0, len(lst), 2):
             cols = st.columns(2)
