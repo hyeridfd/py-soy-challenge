@@ -127,19 +127,45 @@ def fetch_org_responses_df(org: str) -> pd.DataFrame:
 
 # ---------- Pages ----------
 def main():
+    # ✅ 페이지 맨 위에서 CSS 먼저 추가
     st.markdown("""
-        <div style="max-width:1100px; margin:0 auto">
-          <div class="main-header">
-              <h1 class="main-title">두믈리에 챌린지</h1>
-              <p class="subtitle">자연의 맛을 찾아가는 특별한 여행</p>
-          </div>
-        </div>
-        """, unsafe_allow_html=True)
+    <style>
+    /* 탭 중앙 정렬 */
+    .stTabs [data-baseweb="tab-list"]{
+      display: flex !important;
+      justify-content: center !important;
+      width: 100%;
+      gap: 12px;
+    }
+    .stTabs [data-baseweb="tab"]{
+      min-width: 0;
+      padding: 0 20px;
+    }
 
+    /* 본문 가운데 정렬 */
+    section[data-testid="stMain"] .block-container{
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+    # ✅ 헤더
+    st.markdown("""
+    <div class="main-header">
+        <h1 class="main-title">두믈리에 챌린지</h1>
+        <p class="subtitle">자연의 맛을 찾아가는 특별한 여행</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # ✅ 탭 생성
     tab1, tab2, tab3 = st.tabs(["🏠 홈", "🚀 챌린지", "🔧 관리자"])
-    with tab1: home_page()
-    with tab2: challenge_page()
-    with tab3: admin_dashboard()
+    with tab1:
+        home_page()
+    with tab2:
+        challenge_page()
+    with tab3:
+        admin_dashboard()
 
     if st.session_state.get("jump_to_challenge"):
         components.html("""
