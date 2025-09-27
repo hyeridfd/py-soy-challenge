@@ -261,10 +261,22 @@ def challenge_page():
         c1,c2 = st.columns(2)
         with c1:
             name = st.text_input("이름", key="name", placeholder="예) 김스누")
-            gender = st.text_input("성별", key="gender", placeholder="예) 남/여")
+            gender = st.selectbox(
+                "성별",
+                options=["남", "여"],
+                key="gender"
+            )
+
         with c2:
-            age = st.text_input("연령", key="age", placeholder="예) 35")
-            organization = st.text_input("소속", key="organization", placeholder="예) 푸드테크 최고책임자 9기")
+            age = st.number_input(
+                "연령", 
+                min_value=1, 
+                max_value=120, 
+                value=30,           # 기본값
+                step=1,             # 1살씩 증가
+                key="age"
+            )
+            organization = st.text_input("소속", key="organization", value="푸드테크 최고책임자 9기", disabled=True)
         st.markdown("<br>", unsafe_allow_html=True)
         cc1,cc2,cc3 = st.columns([1,2,1])
         with cc2:
