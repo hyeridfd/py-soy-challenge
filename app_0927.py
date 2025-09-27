@@ -192,17 +192,11 @@ def fetch_org_responses_df(org: str) -> pd.DataFrame:
 
 # ---------- Pages ----------
 def main():
+    if st.session_state.get('_scroll_top'):
+        st.markdown("<script>window.scrollTo(0,0);</script>", unsafe_allow_html=True)
+        st.session_state['_scroll_top'] = False
 
-    if st.session_state.get("_scroll_top", False):
-          st.markdown(
-              """
-              <script>
-              window.scrollTo(0, 0);
-              </script>
-              """,
-              unsafe_allow_html=True
-          )
-          st.session_state["_scroll_top"] = False
+    # 탭/페이지 렌더 …
     
     st.markdown("""
     <style>
