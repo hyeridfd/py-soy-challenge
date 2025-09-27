@@ -137,6 +137,10 @@ def fetch_org_responses_df(org: str) -> pd.DataFrame:
 # ---------- Pages ----------
 def main():
     # ✅ 페이지 맨 위에서 CSS 먼저 추가
+    if st.session_state.get('_scroll_top'):
+        scroll_to_top()
+        st.session_state['_scroll_top'] = False
+
     st.markdown("""
     <style>
     /* 탭 중앙 정렬 */
@@ -248,6 +252,7 @@ def home_page():
         if st.button("🚀 챌린지 시작하기", use_container_width=True, key="home_start"):
             st.session_state["jump_to_challenge"] = True
             st.session_state.step = 1
+            st.session_state['_scroll_top'] = True
             st.rerun()
 
 def challenge_page():
