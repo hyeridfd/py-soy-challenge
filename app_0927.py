@@ -228,40 +228,15 @@ def main():
     </div>
     """, unsafe_allow_html=True)
 
-      # 세션 기본값 설정
-    if "active_tab" not in st.session_state:
-        st.session_state["active_tab"] = "home"
-    
-    tab_labels = ["🏠 홈", "🚀 챌린지", "🔧 관리자"]
-    tabs = st.tabs(tab_labels)
 
-  # 🔁 현재 선택된 탭 감지해서 active_tab 업데이트
-    selected_tab_index = [t.empty() for t in tabs]  # dummy 접근으로 tab 상태 업데이트
-    selected_label = tab_labels[[t._active for t in tabs].index(True)]
-    if selected_label == "🏠 홈":
-        st.session_state["active_tab"] = "home"
-    elif selected_label == "🚀 챌린지":
-        st.session_state["active_tab"] = "challenge"
-    elif selected_label == "🔧 관리자":
-        st.session_state["active_tab"] = "admin"
-    # if st.session_state["active_tab"] == "home":
-    #     with tabs[0]:
-    #         home_page()
-    # elif st.session_state["active_tab"] == "challenge":
-    #     with tabs[1]:
-    #         challenge_page()
-    # elif st.session_state["active_tab"] == "admin":
-    #     with tabs[2]:
-    #         admin_dashboard()
-
-    # # ✅ 탭 생성
-    # tab1, tab2, tab3 = st.tabs(["🏠 홈", "🚀 챌린지", "🔧 관리자"])
-    # with tab1:
-    #     home_page()
-    # with tab2:
-    #     challenge_page()
-    # with tab3:
-    #     admin_dashboard()
+    # ✅ 탭 생성
+    tab1, tab2, tab3 = st.tabs(["🏠 홈", "🚀 챌린지", "🔧 관리자"])
+    with tab1:
+        home_page()
+    with tab2:
+        challenge_page()
+    with tab3:
+        admin_dashboard()
 
     if st.session_state.get("jump_to_challenge"):
         components.html("""
