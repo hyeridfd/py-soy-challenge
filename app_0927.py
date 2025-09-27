@@ -58,6 +58,15 @@ BRANDS = {
 SAMPLES = ["1", "2", "3", "4"]
 
 # ---------- Helpers ----------
+def scroll_to_top():
+    components.html("""
+    <script>
+      // Streamlit rerun 후 맨 위로 이동
+      window.parent && window.parent.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    </script>
+    """, height=0)
+    
 def create_modern_taste_profile(taste_data, title):
     fig = go.Figure()
     categories = ['☕ 진함', '🧊 단맛']
@@ -263,6 +272,7 @@ def challenge_page():
                 if name and gender and age and organization:
                     st.session_state.participant_info = {"name":name,"gender":gender,"age":age,"organization":organization}
                     st.session_state.step = 2
+                    st.session_state['_scroll_top'] = True
                     st.rerun()
                 else:
                     st.error("모든 정보를 입력해주세요.")
@@ -292,7 +302,9 @@ def challenge_page():
                 st.session_state.step = 1; st.rerun()
         with n:
             if st.button("시음 평가하기 ➡️", use_container_width=True, key="next2"):
-                st.session_state.step = 3; st.rerun()
+                st.session_state.step = 3
+                st.session_state['_scroll_top'] = True 
+                st.rerun()
 
     # 3단계
     elif st.session_state.step == 3:
@@ -357,7 +369,9 @@ def challenge_page():
                         s: {"진함": st.session_state[f"{s}_cleanness"], "단맛": st.session_state[f"{s}_sweetness"], "선택브랜드": st.session_state[f"{s}_brand"]}
                         for s in SAMPLES
                     }
-                    st.session_state.step = 4; st.rerun()
+                    st.session_state.step = 4
+                    st.session_state['_scroll_top'] = True 
+                    st.rerun()
 
     # 4단계
     elif st.session_state.step == 4:
