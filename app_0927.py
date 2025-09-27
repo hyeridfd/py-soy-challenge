@@ -268,7 +268,7 @@ def challenge_page():
             gender = st.text_input("성별", key="gender", placeholder="예) 남/여")
         with c2:
             age = st.text_input("연령", key="age", placeholder="예) 35")
-            organization = st.text_input("소속", key="organization", placeholder="예) 푸드테크 최고책임자")
+            organization = st.text_input("소속", key="organization", placeholder="예) 푸드테크 최고책임자 9기")
         st.markdown("<br>", unsafe_allow_html=True)
         cc1,cc2,cc3 = st.columns([1,2,1])
         with cc2:
