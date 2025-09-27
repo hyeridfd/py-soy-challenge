@@ -21,7 +21,7 @@ from supabase import create_client, Client
 
 
 # ===================== Supabase =====================
-pip install supabase openpyxl
+# pip install supabase openpyxl
 
 @st.cache_resource
 def supabase_client() -> Client:
